@@ -1,0 +1,162 @@
+<template>
+  <li 
+ 
+  @click="start_end_date"
+  tabindex="1"
+    class="calendar-day"
+    :class="{
+      'calendar-day--not-current': !day.isCurrentMonth,
+      'interval-now':day.isInterval,
+      'transparent':day.clicked,
+       
+      // 'calendar-day--today': isToday
+    }"
+  >
+    <span>{{ label }}</span>
+    
+  </li>
+</template>
+
+<script>
+import dayjs from "dayjs";
+
+export default {
+  name: "CalendarMonthDayItem",
+  data(){
+    return{
+      arr: [],
+      counter:0,
+      intervalNow:false,
+      
+    }
+  },
+  props: {
+    day: {
+      type: Object,
+      required: true
+    },
+
+    isCurrentMonth: {
+      type: Boolean,
+      default: false
+    },
+    // isInInterval:{
+    //     type:Boolean,
+    //     default: false
+    // },
+    isToday: {
+      type: Boolean,
+      default: false
+    },
+    mycounter:{
+      type:Number
+    },
+    interval:{
+      type:Array
+    },
+    days:{
+      type:Array
+    }
+
+
+    
+    // selectedDate: {
+    //   type: Object,
+    //   required: true
+    // }
+
+  },
+
+  computed: {
+    label() {
+      return dayjs(this.day.date).format("D");
+    },
+
+  },
+
+  methods: {
+
+    start_end_date(){
+      let start_end = dayjs(this.day.date); 
+      this.$emit("start_end_selected",start_end)
+      //console.log(this.interval,"xx")
+       console.log("xxxx",this.interval)
+      // console.log(this.days)
+      // for(var i of this.days){
+      //   for(var j of this.interval){
+      //     this.intervalNow = false
+      //     if(j.format("YYYY-MM-DD") == i.date){
+      //        this.intervalNow = true            
+      //     }
+      //   }
+      // }
+      
+      // for(var i of this.interval){
+      //   console.log(i.format("YYYY-MM-DD"))
+      // }
+      // for(var j of this.days){
+      //   console.log(j.date)
+      // }
+    }
+  },
+  printinerval(){
+
+  }
+};
+</script>
+
+<style scoped>
+.calendar-day {
+  position: relative;
+  font-size: 16px;
+  background-color: #fff;
+  color: var(--grey-800);
+
+}
+
+.calendar-day > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+
+}
+
+.calendar-day--not-current {
+  color: #3C3C3B;
+  opacity: 0.1;
+}
+.interval-now{
+  background-color: lightgreen !important;
+}
+/* 
+ */
+.calendar-day--today {
+  padding-top: 4px;
+  font-size: 14px;
+  font: normal normal normal 14px/27px Poppins;
+  color: #3C3C3B;
+}
+
+/* .calendar-day--today > span {
+  color: #fff;
+  border-radius: 9999px;
+  background-color: var(--grey-800);
+  
+/* }
+ */
+li{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  
+} 
+li:hover{
+  background-color: #3C3C3B0D;
+  cursor: pointer;
+}
+li:focus{
+  background-color: green !important;
+}
+</style>
