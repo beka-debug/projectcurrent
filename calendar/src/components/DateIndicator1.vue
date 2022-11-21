@@ -13,7 +13,7 @@
     export default {
   
       props: {
-        selectedDatee: {
+        selectedDate: {
           type: Object,
           required: true
         }
@@ -21,7 +21,7 @@
     
       computed: {
         selectedMonth() {
-          return this.selectedDatee.format("MMMM");
+          return this.selectedDate.format("MMMM");
         }
       },
       methods: {
@@ -31,11 +31,11 @@
            console.log(this.show)
       },
         selectPrevious() {
-        let newSelectedDate = dayjs(this.selectedDatee).subtract(1, "month");
+        let newSelectedDate = dayjs(this.selectedDate).subtract(1, "month");
         this.$emit("dateSelected", newSelectedDate);
       },
       selectNext() {
-        let newSelectedDate = dayjs(this.selectedDatee).add(1, "month");
+        let newSelectedDate = dayjs(this.selectedDate).add(1, "month");
         this.$emit("dateSelected", newSelectedDate);
       }
       },

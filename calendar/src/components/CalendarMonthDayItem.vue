@@ -27,6 +27,7 @@ export default {
       arr: [],
       counter:0,
       intervalNow:false,
+      show:false
       
     }
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-month">
-    <div class="left">
+    
     <div class="calendar-month-header">
       <CalendarDateIndicator     
         :selected-date="selectedDate"
@@ -22,7 +22,7 @@
       <CalendarMonthDayItem
       
       @start_end_selected="start_end"
-        :interval="interval"
+        
         :days="days"
         v-for="day in days"
         :key="day.date"
@@ -37,44 +37,7 @@
     :curmonths="curmonths"
     />
   </div>
-  <div class="right">
-    <div class="calendar-month-header">
-      <RightCalendarDateIndicator     
-        :selected-datee="selectedDatee"
-        class="calendar-month-header-selected-month"
-        @dateSelected="selectDatee"
-        @showmonth="showmonthsubscriber"
-      />
 
-      <CalendarDateSelector
-        :current-date="today"
-        :selected-date="selectedDate"
-        @dateSelected="selectDate"
-      />
-    </div>
-
-    <CalendarWeekdays/>
-
-    <ol  class="days-grid">
-      <CalendarMonthDayItem
-      
-      @start_end_selected="start_end"
-        :interval="interval"
-        :days="days"
-        v-for="day in days"
-        :key="day.date"
-        :day="day"
-        :is-today="day.date === today"
-      />
-    </ol>
-    {{selectedDate}}
-    <Months
-    @choosemonth = "chooseMonthSubscriber"
-    v-if ="this.show"
-    :curmonths="curmonths"
-    />
-  </div>
-  </div>
   
 </template>
 
@@ -87,7 +50,7 @@ import CalendarDateIndicator from "./CalendarDateIndicator";
 import CalendarDateSelector from "./CalendarDateSelector";
 import CalendarWeekdays from "./CalendarWeekdays";
 import Months from "./Months";
-import RightCalendarDateIndicator from "./RightCalendarDateIndicator";
+
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -105,8 +68,8 @@ export default {
     CalendarDateSelector,
     CalendarWeekdays,
     Months,
-    RightCalendarDateIndicator
   },
+  
 //   mounted(){
 //    console.log(dayjs.months())
 // },
@@ -123,7 +86,10 @@ export default {
       monthindex:0
     };
   },
-
+  props:{
+      endDate:dayjs(),
+      newint:[]
+    },
   computed: {
     days() {
       return [
@@ -133,6 +99,7 @@ export default {
         // ...this.intervalDays
       ];
     },
+
     
 
     today() {
@@ -162,13 +129,13 @@ export default {
       //   intarr.push(obj)
         
       // }
-      console.log(this.interval)
+      //console.log(this.interval)
       for(var i of this.interval){
         intarr.push(i.format("YYYY-MM-DD"))
       }
      
      
-      console.log(intarr)
+      //console.log(intarr)
       return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
         let date = dayjs(`${this.year}-${this.month}-${index + 1}`).format(
             "YYYY-MM-DD")
@@ -256,10 +223,10 @@ export default {
       this.show = mon.show
       let choosenindex = mon.index + 1
       let currentindex = dayjs(this.selectedDate).format("MM") 
-      if(choosenindex < currentindex){
+      //if(choosenindex < currentindex){
         let interv = currentindex - choosenindex
         this.selectedDate = dayjs(this.selectedDate).subtract(interv, "month");
-      }
+      //}
       // console.log(this.choosenmonth,"subscribed", this.curmonths[this.index])
     },
     showmonthsubscriber(x){
@@ -277,15 +244,24 @@ export default {
     },
     start_end(starEndDate){
       this.interval = []
-       this.selectedDate = starEndDate
-       this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
+       
+      this.selectedDate = starEndDate
+      this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
+      this.$emit("intervalemitter",this.selectedDate.format("YYYY-MM-DD"))
+      
+       
        if(this.arr.length > 1){
         
         //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
         let date1 = dayjs(this.arr[this.arr.length - 1])
         let date2 = dayjs(this.arr[this.arr.length - 2])
-        console.log(date1,date2)
-        console.log(this.arr)
+
+        console.log(this.endDate)
+        //this.$emit("intervalemitter",date2)
+    
+        //console.log(date1)
+        //console.log(date2)
+        //console.log(this.arr)
         let diff = date1.diff(date2,"hours")/24
         // let interval = []
         let currentdays = []
@@ -295,11 +271,12 @@ export default {
           this.interval.push(date2.add(i,"day"))
           
         }
+        this.$emit("leftintervalemitter",this.interval)
         this.arr = this.arr.reverse().splice(0,1)
         
         //console.log(this.interval)
         
-        console.log(this.intervalDays)
+        //console.log(this.intervalDays)
         console.log(this.currentMonthDays)
         
         // for(let i of this.days){
@@ -339,19 +316,13 @@ export default {
   position: relative;
   background-color: var(--grey-200);
   border: solid 1px var(--grey-300);
-  width:600px;
+  width:300px;
   padding: 10px 30px;
   background-color: transparent;
-  display: flex;
-  justify-content: space-between;
+
   
 }
-.left{
-  
-}
-.left, .right{
-  width: 280px;
-}
+
 .day-of-week {
   color: #3C3C3B;
   font-size: 14px;
@@ -378,8 +349,6 @@ export default {
 
   border:none !important;
 }
-li{
-  
-}
+
 
 </style>

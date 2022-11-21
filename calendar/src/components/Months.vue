@@ -42,6 +42,7 @@ export default{
             index:index
           }
          this.$emit("choosemonth",info)
+         console.log(info.index)
          //console.log("emited");
         }
     },
