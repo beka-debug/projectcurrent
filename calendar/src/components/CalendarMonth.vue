@@ -425,7 +425,7 @@ export default {
   background-color: var(--grey-200);
   border: solid 1px var(--grey-300);
   width:300px;
-  padding: 10px 30px;
+  padding: 10px 0px;
   background-color: transparent;
 
   
@@ -443,6 +443,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(7,1fr);
   border:none !important;
+  padding: 5px 15px;
   
 }
 
@@ -458,5 +459,10 @@ export default {
   border:none !important;
 }
 
-
+.calendar-month-header{
+    border-bottom: 1px solid gray;  
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+  }
 </style>
