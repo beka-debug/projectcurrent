@@ -3,7 +3,9 @@
     <span @click="selectPrevious"><</span>
     <span @click="selectCurrent">{{selectedYear}}</span>
     <span @click="selectNext">></span>
+    
   </div>
+
 </template>
 
 <script>
@@ -39,6 +41,7 @@ export default {
     selectCurrent() {
       let newSelectedDate = dayjs(this.currentDate);
       this.$emit("dateSelected", newSelectedDate);
+      this.$emit("showYearFuncEmitter",true)
     },
 
     selectNext() {

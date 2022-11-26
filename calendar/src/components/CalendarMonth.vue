@@ -1,6 +1,8 @@
 <template>
   <div class="calendar-month">
-    
+    <selectDate
+    @fulldateemitter="fulldatesubscriber"
+    />
     <div class="calendar-month-header">
       <CalendarDateIndicator     
         :selected-date="selectedDate"
@@ -13,14 +15,20 @@
         :current-date="today"
         :selected-date="selectedDate"
         @dateSelected="selectDate"
+        @showYearFuncEmitter="showYearFuncSubscriber"
       />
     </div>
 
-    <CalendarWeekdays/>
+    <CalendarWeekdays
+    v-if ="!showDays"
+    />
 
-    <ol  class="days-grid">
+    <ol 
+    v-if ="!showDays"
+    class="days-grid">
       <CalendarMonthDayItem
       
+
       @start_end_selected="start_end"
         
         :days="days"
@@ -30,12 +38,21 @@
         :is-today="day.date === today"
       />
     </ol>
-    {{selectedDate}}
+    
     <Months
     @choosemonth = "chooseMonthSubscriber"
     v-if ="this.show"
     :curmonths="curmonths"
     />
+
+    <Years
+    v-if="this.showyear"
+   @chooseyearemitter="chooseYearSubscriber"
+    />
+    
+    <button @click="fillDropYears()">xxxx</button>
+
+    {{selectedDate}}
   </div>
 
   
@@ -50,6 +67,8 @@ import CalendarDateIndicator from "./CalendarDateIndicator";
 import CalendarDateSelector from "./CalendarDateSelector";
 import CalendarWeekdays from "./CalendarWeekdays";
 import Months from "./Months";
+import Years from "./Years";
+import SelectDate from "./SelectDate";
 
 
 dayjs.extend(weekday);
@@ -68,6 +87,8 @@ export default {
     CalendarDateSelector,
     CalendarWeekdays,
     Months,
+    Years,
+    SelectDate
   },
   
 //   mounted(){
@@ -81,16 +102,30 @@ export default {
       arr:[],
       interval:[],
       show:false,
+      showyear:false,
       curmonths:dayjs.months(),
       choosenmonth:"",
-      monthindex:0
+      choosenyear:null,
+      monthindex:0,
+      dropYears:[],
+      fulldate:""
     };
   },
   props:{
       endDate:dayjs(),
-      newint:[]
+      newint:[],
+      lastinterva:""
+      
     },
   computed: {
+    showDays(){
+     if(this.show ==  true || this.showyear == true){
+      return true
+     }
+     else{
+      return false
+     }
+    },
     days() {
       return [
         ...this.previousMonthDays,
@@ -133,17 +168,34 @@ export default {
       for(var i of this.interval){
         intarr.push(i.format("YYYY-MM-DD"))
       }
-     
+      let firstInterval = intarr[0];
+      let lastInterval = intarr[intarr.length-1];
+    // console.log(firstInterval,lastInterval)
+
+    //  for(let i = 0; i < this.currentMonthDays.length; i++){
+    //   console.log(this.currentMonthDays[i])
+    //  }
      
       //console.log(intarr)
+      let isWeekend = false
       return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
         let date = dayjs(`${this.year}-${this.month}-${index + 1}`).format(
             "YYYY-MM-DD")
+        let dt = new Date(`${this.year}-${this.month}-${index + 1}`)
+        if(dt.getDay() == 6 || dt.getDay() == 0 ){
+            isWeekend = true
+        }
+        else{
+          isWeekend = false
+        }
         return {   
           date,
           isCurrentMonth: true,
          isInterval: true ? intarr.includes(date) : false,
-         clicked:true
+         clicked:true,
+         first:true ? date == firstInterval : false,
+         last:true ? date == lastInterval : false,
+         weekend: isWeekend
         };
       });
     },
@@ -179,15 +231,25 @@ export default {
       )
         .subtract(visibleNumberOfDaysFromPreviousMonth, "day")
         .date();
-
+      let isWeekend = false
       return [...Array(visibleNumberOfDaysFromPreviousMonth)].map(
         (day, index) => {
-          return {
-            date: dayjs(
+          let date = dayjs(
               `${previousMonth.year()}-${previousMonth.month() +
                 1}-${previousMonthLastMondayDayOfMonth + index}`
-            ).format("YYYY-MM-DD"),
-            isCurrentMonth: false
+            ).format("YYYY-MM-DD")
+            let dt = new Date(`${this.year}-${this.month}-${index + 1}`)
+        if(dt.getDay() == 6 || dt.getDay() == 0 ){
+            isWeekend = true
+        }
+        else{
+          isWeekend = false
+        }
+          return {
+            date,
+            isCurrentMonth: false,
+            weekend: isWeekend
+
           };
         }
       );
@@ -218,6 +280,71 @@ export default {
   },
 
   methods: {
+    fulldatesubscriber(e){
+      this.interval = []
+      let dt = e
+
+     this.fulldate = dayjs(`${dt.slice(6,10)}-${dt.slice(3,5)}-${dt.slice(0,2)}`)
+     this.selectedDate = this.fulldate
+     this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
+    this.$emit("intervalemitter",this.selectedDate.format("YYYY-MM-DD"))
+
+    if(this.arr.length == 1){
+        let date1 = dayjs(this.arr[this.arr.length - 1])
+        let date2 = dayjs(this.lastinterva)
+        let diff = date1.diff(date2,"hours")/24
+        for(let i = 0; i <= diff;i++){
+          this.interval.push(date2.add(i,"day"))
+          
+        }
+        this.$emit("leftintervalemitter",this.interval)
+        this.arr = this.arr.reverse().splice(0,1)
+       }
+       if(this.arr.length > 1){
+        
+        //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
+        let date1 = dayjs(this.arr[this.arr.length - 1])
+        let date2 = dayjs(this.arr[this.arr.length - 2])
+
+        let diff = date1.diff(date2,"hours")/24
+
+        for(let i = 0; i <= diff;i++){
+          this.interval.push(date2.add(i,"day"))
+          
+        }
+        this.$emit("leftintervalemitter",this.interval)
+        this.arr = this.arr.reverse().splice(0,1)
+        
+       }
+     console.log("done")
+
+    },
+    showYearFunc(){
+      this.showyear = true
+      console.log("x")
+    },
+    showYearFuncSubscriber(e){
+      this.showyear = !this.showyear
+    },
+    fillDropYears(){
+      let dt = new Date().getFullYear()
+        for(let i = dt - 11; i <= dt; i++){
+            this.dropYears.push(i)
+        }
+        //this.$emit("dropyearsemitter", this.dropYears)
+      // console.log(this.lastinterva)
+      console.log(this.arr)
+       // console.log(this.dropYears, this.showyear)
+    },
+    chooseYearSubscriber(yr){
+         this.choosenyear = yr.year
+         this.showyear = false
+         let interval = dayjs(this.selectedDate).format("YYYY") - yr.year
+         //console.log(interval)
+         this.selectedDate =  dayjs(this.selectedDate).subtract(interval, "year");
+       // console.log(this.selectDate)
+       // console.log(dayjs(this.selectedDate).format("YYYY"))
+    },
     chooseMonthSubscriber(mon){
       this.choosenmonth = mon.month;
       this.show = mon.show
@@ -248,56 +375,37 @@ export default {
       this.selectedDate = starEndDate
       this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
       this.$emit("intervalemitter",this.selectedDate.format("YYYY-MM-DD"))
-      
-       
+      // if(this.arr.length == 1){
+
+      // }
+       if(this.arr.length == 1){
+        let date1 = dayjs(this.arr[this.arr.length - 1])
+        let date2 = dayjs(this.lastinterva)
+        let diff = date1.diff(date2,"hours")/24
+        for(let i = 0; i <= diff;i++){
+          this.interval.push(date2.add(i,"day"))
+          
+        }
+        this.$emit("leftintervalemitter",this.interval)
+        this.arr = this.arr.reverse().splice(0,1)
+       }
        if(this.arr.length > 1){
         
         //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
         let date1 = dayjs(this.arr[this.arr.length - 1])
         let date2 = dayjs(this.arr[this.arr.length - 2])
 
-        console.log(this.endDate)
-        //this.$emit("intervalemitter",date2)
-    
-        //console.log(date1)
-        //console.log(date2)
-        //console.log(this.arr)
         let diff = date1.diff(date2,"hours")/24
-        // let interval = []
-        let currentdays = []
-        //dayjs(this.selectedDate).subtract(1, "year");
-        // console.log(date2.daysInMonth())
-        for(let i = 0; i < diff;i++){
+
+        for(let i = 0; i <= diff;i++){
           this.interval.push(date2.add(i,"day"))
           
         }
         this.$emit("leftintervalemitter",this.interval)
         this.arr = this.arr.reverse().splice(0,1)
         
-        //console.log(this.interval)
-        
-        //console.log(this.intervalDays)
-        console.log(this.currentMonthDays)
-        
-        // for(let i of this.days){
-           
-        //   currentdays.push(i.date)
-
-        // }
-        let x = 0
-      // for(let i of this.interval){
-      //   for(let j of this.days){
-      //     if(dayjs(i).format("YYYY-MM-DD") == j.date){
-             
-      //     } 
-      //   }
-      // }
-      // this.$emit("intervals",interval)
-      // გავატანოთ ინფორმაცია ინტერვალზე და 
-      // მიმდინარე დღეებზე მოცემულ თვეში
-      // https://www.youtube.com/watch?v=UtV-WZUtak4
-        
        }
+      // დაემიტება start date-ის შესაცვლელად this.$emit()
       },
     // y(){
     //   this.arr.push(this.selectedDate.format("YYYY-MM-DD"))

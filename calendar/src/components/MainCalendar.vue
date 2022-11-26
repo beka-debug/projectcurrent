@@ -4,6 +4,7 @@
     <CalendarMonth
     :endDate="endDate"
     :newint="newint"
+    :lastinterva="lastinterva"
     @leftintervalemitter="leftintervalsubscriber"
     @intervalemitter="intervalSubscriber"></CalendarMonth>
 </div>
@@ -12,6 +13,7 @@
     :startDate="startDate"
     :leftinterval="leftinterval"
     @secondintervalemitter="secondintervalSubscriber"
+    @lastintervalemitter="lastintervalsubscriber"
     ></Month1>
 </div>
     <button @click="alldates">dates</button>
@@ -25,9 +27,8 @@
 
 <script>
 import dayjs from 'dayjs';
-import { computed } from 'vue';
 import CalendarMonth from './CalendarMonth';
-import Month1 from './Month1';
+import Month1 from './Month1';  
 export default{
    components:{
        CalendarMonth,
@@ -40,7 +41,9 @@ export default{
         endDate:dayjs(),
         newint:[],
         counter:0,
-        leftinterval:[]
+        leftinterval:[],
+        lastinterva:""
+        // newarr:[]
     }
    },
    computed:{
@@ -52,6 +55,12 @@ export default{
 //       startdate:String
 //    },
    methods: {
+    // newarrsubscriber(e){
+    //     this.newarr = e
+    // },
+    lastintervalsubscriber(e){
+      this.lastinterva = e
+    },
     intervalSubscriber(dt){
         this.startDate = dt
        // console.log(this.endDate,"------------------")
@@ -63,8 +72,10 @@ export default{
        this.newint.push(this.endDate)
     },
     alldates(){
-        console.log(this.startDate)
-        console.log(this.endDate)
+        // console.log(this.startDate)
+        // console.log(this.endDate)
+       // console.log(this.newarr)
+       console.log(this.lastinterva)
     },
     leftintervalsubscriber(leftint){
         this.leftinterval = leftint

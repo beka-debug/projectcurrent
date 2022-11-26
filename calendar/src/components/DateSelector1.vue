@@ -39,6 +39,7 @@
       selectCurrent() {
         let newSelectedDate = dayjs(this.currentDate);
         this.$emit("dateSelected", newSelectedDate);
+        this.$emit("showYearFuncEmitter",true)
       },
   
       selectNext() {

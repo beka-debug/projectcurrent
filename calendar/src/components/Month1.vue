@@ -13,12 +13,17 @@
           :current-date="today"
           :selected-date="selectedDate"
           @dateSelected="selectDate"
+          @showYearFuncEmitter="showYearFuncSubscriber"
         />
       </div>
   
-      <WeekDays1/>
+      <WeekDays1
+      v-if ="!showDays"
+      />
   
-      <ol  class="days-grid">
+      <ol  
+      v-if ="!showDays"
+      class="days-grid">
         <MonthDayItem1
         
         @start_end_selected="start_end"
@@ -31,13 +36,19 @@
           :is-today="day.date === today"
         />
       </ol>
-      {{selectedDate}}
-      <Months
-      @choosemonth = "chooseMonthSubscriber"
-      v-if ="this.show"
-      :curmonths="curmonths"
-      />
+
+
+      <Months1
+    @choosemonth = "chooseMonthSubscriber"
+    v-if ="this.show"
+    :curmonths="curmonths"
+    />
+    <Years1
+    v-if="this.showyear"
+   @chooseyearemitter="chooseYearSubscriber"
+    />
       <button @click="int()">int</button>
+      {{selectedDate}}
     </div>
   
     
@@ -51,6 +62,8 @@
   import DateIndicator1 from "./DateIndicator1";
   import DateSelector1 from "./DateSelector1";
   import WeekDays1 from "./WeekDays1";
+  import Months1 from "./Months1";
+  import Years1 from "./Years1"
 //   import Months from "./Months";
   
   
@@ -69,6 +82,8 @@
       DateIndicator1,
       DateSelector1,
       WeekDays1,
+      Months1,
+      Years1
       //Months,
     },
     // mounted(){
@@ -82,6 +97,7 @@
         arr:[],
         interval:[],
         show:false,
+        showyear:false,
         curmonths:dayjs.months(),
         choosenmonth:"",
         monthindex:0
@@ -92,6 +108,14 @@
       leftinterval:[]
     },
     computed: {
+      showDays(){
+     if(this.show ==  true || this.showyear == true){
+      return true
+     }
+     else{
+      return false
+     }
+    },
       days() {
         return [
           ...this.previousMonthDays,
@@ -133,7 +157,8 @@
         for(var i of this.leftinterval){
           intarr.push(i.format("YYYY-MM-DD"))
         }
-       
+        let firstInterval = intarr[0];
+      let lastInterval = intarr[intarr.length-1];
        
         //console.log(intarr)
         return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
@@ -143,7 +168,9 @@
             date,
             isCurrentMonth: true,
            isInterval: true ? intarr.includes(date) : false,
-           clicked:true
+           clicked:true,
+           first:true ? date == firstInterval : false,
+         last:true ? date == lastInterval : false,
           };
         });
       },
@@ -218,17 +245,30 @@
     },
   
     methods: {
+      showYearFuncSubscriber(e){
+      this.showyear = !this.showyear
+      console.log("dasd")
+    },
       chooseMonthSubscriber(mon){
         this.choosenmonth = mon.month;
         this.show = mon.show
         let choosenindex = mon.index + 1
         let currentindex = dayjs(this.selectedDate).format("MM") 
-        if(choosenindex < currentindex){
+        // if(choosenindex < currentindex){
           let interv = currentindex - choosenindex
           this.selectedDate = dayjs(this.selectedDate).subtract(interv, "month");
-        }
+        //}
         // console.log(this.choosenmonth,"subscribed", this.curmonths[this.index])
       },
+      chooseYearSubscriber(yr){
+         this.choosenyear = yr.year
+         this.showyear = false
+         let interval = dayjs(this.selectedDate).format("YYYY") - yr.year
+         //console.log(interval)
+         this.selectedDate =  dayjs(this.selectedDate).subtract(interval, "year");
+       // console.log(this.selectDate)
+       // console.log(dayjs(this.selectedDate).format("YYYY"))
+    },
       int(){
       console.log(this.leftinterval)
       },
@@ -272,16 +312,24 @@
         //  console.log(date1,dayjs(this.startDate.format("YYYY-MM-DD"),"fsgfgdfg"))
           //console.log(this.arr)
           let diff = date1.diff(this.startDate,"hours")/24
-          console.log(diff)
-          console.log(date1)
-          console.log(this.startDate)
-          console.log(this.arr)
+          //console.log(diff)
+          //console.log(date1)
+          //console.log(this.startDate)
+          if(this.arr.length > 2){
+            // console.log(this.arr[2],this.arr)
+            //this.$emit("lastintervalemitter",this.arr[2])
+          }
+          else{
+            //console.log(typeof(this.arr[1]),this.arr)
+            this.$emit("lastintervalemitter",this.arr[1])
+          }
+          //this.$emit("newarremitter",this.arr)
           // let interval = []
           //console.log(this.arr)
          // console.log(this.date1)
           //dayjs(this.selectedDate).subtract(1, "year");
           // console.log(date2.daysInMonth())
-          for(let i = 0; i < diff;i++){
+          for(let i = 0; i <= diff;i++){
             this.interval.push(dayjs(this.startDate).add(i,"day"))
             
           }

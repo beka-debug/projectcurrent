@@ -8,6 +8,8 @@
         'calendar-day--not-current': !day.isCurrentMonth,
         'interval-now':day.isInterval,
         'transparent':day.clicked,
+        'int':day.first,
+        'int2':day.last
          
         // 'calendar-day--today': isToday
       }"
@@ -159,5 +161,15 @@
   li:focus{
     background-color: green !important;
   }
+  .int{
+  background-color: green !important;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.int2{
+  background-color: green !important;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
   </style>
   

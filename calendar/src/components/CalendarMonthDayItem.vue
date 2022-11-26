@@ -8,11 +8,15 @@
       'calendar-day--not-current': !day.isCurrentMonth,
       'interval-now':day.isInterval,
       'transparent':day.clicked,
+      'int':day.first ,
+      'int2':day.last,
+      
+      'weekend':disabledday
        
       // 'calendar-day--today': isToday
     }"
   >
-    <span>{{ label }}</span>
+    <span>{{ label  }} </span>
     
   </li>
 </template>
@@ -72,6 +76,17 @@ export default {
     label() {
       return dayjs(this.day.date).format("D");
     },
+    disabledday(){
+      if(!this.day.isCurrentMonth && this.day.weekend){
+        return true
+      }
+      else if(this.day.weekend == true){
+        return true
+      }
+      else{
+        return false
+      }
+    }
 
   },
 
@@ -123,12 +138,17 @@ export default {
 
 }
 
+.weekend{
+  pointer-events: none !important;
+  color: rgb(148, 145, 145);
+}
 .calendar-day--not-current {
   color: #3C3C3B;
   opacity: 0.1;
+  
 }
 .interval-now{
-  background-color: lightgreen !important;
+  background-color: lightgreen ;
 }
 /* 
  */
@@ -158,6 +178,16 @@ li:hover{
   cursor: pointer;
 }
 li:focus{
+  background-color: green ;
+}
+.int{
   background-color: green !important;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.int2{
+  background-color: green !important;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 </style>
