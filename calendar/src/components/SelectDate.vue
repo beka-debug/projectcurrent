@@ -36,7 +36,9 @@ export default{
         }
         if(this.fulldate.length ==10){
             this.$emit("fulldateemitter",this.fulldate)
+            
         }
+      
         return this.fulldate
     }
   },

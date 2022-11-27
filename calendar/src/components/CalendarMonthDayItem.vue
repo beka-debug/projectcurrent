@@ -11,7 +11,8 @@
       'int':day.first ,
       'int2':day.last,
       
-      'weekend':disabledday
+      'weekend':disabledday,
+      'fulldate':day.fulldate
        
       // 'calendar-day--today': isToday
     }"
@@ -189,5 +190,8 @@ li:focus{
   background-color: green !important;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+.fulldate{
+  background-color: green;
 }
 </style>

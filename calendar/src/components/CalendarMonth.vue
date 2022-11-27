@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import CalendarMonthDayItem from "./CalendarMonthDayItem";
@@ -108,7 +108,8 @@ export default {
       choosenyear:null,
       monthindex:0,
       dropYears:[],
-      fulldate:""
+      fulldate:dayjs(),
+      daysInCurrentMonth:[]
     };
   },
   props:{
@@ -126,6 +127,7 @@ export default {
       return false
      }
     },
+    
     days() {
       return [
         ...this.previousMonthDays,
@@ -195,7 +197,8 @@ export default {
          clicked:true,
          first:true ? date == firstInterval : false,
          last:true ? date == lastInterval : false,
-         weekend: isWeekend
+         weekend: isWeekend,
+         fulldate: true ? (this.selectedDate == date && isWeekend == false) : false,
         };
       });
     },
@@ -316,6 +319,12 @@ export default {
         this.arr = this.arr.reverse().splice(0,1)
         
        }
+       let currmonth = this.selectedDate.format("MM")
+      let curryear= this.selectedDate.format("YYYY")
+      
+      for(let i = 1; i <= this.selectedDate.daysInMonth();i++){
+          this.daysInCurrentMonth.push(`${curryear}-${currmonth}-${i}`)
+      }
      console.log("done")
 
     },
@@ -333,7 +342,8 @@ export default {
         }
         //this.$emit("dropyearsemitter", this.dropYears)
       // console.log(this.lastinterva)
-      console.log(this.arr)
+
+      console.log(this.daysInCurrentMonth)
        // console.log(this.dropYears, this.showyear)
     },
     chooseYearSubscriber(yr){
