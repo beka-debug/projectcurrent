@@ -78,7 +78,8 @@ export default {
       return dayjs(this.day.date).format("D");
     },
     disabledday(){
-      if(!this.day.isCurrentMonth && this.day.weekend){
+      console.log(this.day)
+      if( this.day.weekend){
         return true
       }
       else if(this.day.weekend == true){

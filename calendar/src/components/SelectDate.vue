@@ -35,11 +35,12 @@ export default{
             this.fulldate += "."
         }
         if(this.fulldate.length ==10){
+          console.log(this.fulldate)
             this.$emit("fulldateemitter",this.fulldate)
-            
+            console.log("10 characters are filled")
         }
       
-        return this.fulldate
+        // return this.fulldate
     }
   },
 }

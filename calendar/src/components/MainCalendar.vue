@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <div class="leftcalendar">
+         <!-- <div class="leftcalendar">
     <CalendarMonth
     :endDate="endDate"
     :newint="newint"
@@ -16,11 +16,12 @@
     @lastintervalemitter="lastintervalsubscriber"
     ></Month1>
 </div>
-    <button @click="alldates">dates</button>
-    <!-- <CalendarMonth></CalendarMonth> -->
+    <button @click="alldates">dates</button> -->
+    <!-- <input type="date">
+    <input type="time"> --> 
 
-    <!-- <RightCalendar></RightCalendar> -->
-    <!-- <CalendarMonth></CalendarMonth> -->
+    <PickerMainMonth/>
+
 </div>
     
 </template>
@@ -29,12 +30,13 @@
 import dayjs from 'dayjs';
 import CalendarMonth from './CalendarMonth';
 import Month1 from './Month1';  
+import PickerMainMonth from './PickerMainMonth';
 export default{
    components:{
-       CalendarMonth,
-       Month1
-
-   },
+    CalendarMonth,
+    Month1,
+    PickerMainMonth
+},
    data() {
     return {
         startDate:dayjs(),

@@ -82,7 +82,7 @@
         let start_end = dayjs(this.day.date); 
         this.$emit("start_end_selected",start_end)
         //console.log(this.interval,"xx")
-         console.log("xxxx",this.interval)
+         //console.log( start_end)
         // console.log(this.days)
         // for(var i of this.days){
         //   for(var j of this.interval){

@@ -272,7 +272,8 @@
        // console.log(dayjs(this.selectedDate).format("YYYY"))
     },
       int(){
-      console.log(this.leftinterval)
+      console.log(this.interval)
+      console.log(this.arr)
       },
       showmonthsubscriber(x){
                this.show = x
@@ -289,15 +290,17 @@
       },
       
       start_end(starEndDate){
-        console.log(dayjs(this.startDate),"++++++++++")
+       // console.log(dayjs(this.startDate),"++++++++++")
+       this.interval = []
         this.interval = this.leftinterval
        this.arr.push(dayjs(this.startDate).format("YYYY-MM-DD"))
         //console.log(this.selectedDate)
         //console.log(this.startDate)
          this.selectedDate = starEndDate
-         
+         //this.$emit("lastdateemitter", this.selectedDate)
+        // console.log(this.interval)
          this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
-         this.$emit("secondintervalemitter",this.arr[1])
+         //this.$emit("secondintervalemitter",this.arr[1])
          if(this.arr.length > 1){
           
           //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
@@ -309,57 +312,24 @@
           else{
             date1 = dayjs(this.arr[1])
           }   
-          //this.startDate = dayjs(this.arr[this.arr.length - 2])
-         // console.log(this.startDate, date1)
-        //  console.log(date1,dayjs(this.startDate.format("YYYY-MM-DD"),"fsgfgdfg"))
-          //console.log(this.arr)
+
           let diff = date1.diff(this.startDate,"hours")/24
-          //console.log(diff)
-          //console.log(date1)
-          //console.log(this.startDate)
           if(this.arr.length > 2){
             // console.log(this.arr[2],this.arr)
             //this.$emit("lastintervalemitter",this.arr[2])
           }
           else{
-            //console.log(typeof(this.arr[1]),this.arr)
             this.$emit("lastintervalemitter",this.arr[1])
+            console.log(this.arr[1])
           }
-          //this.$emit("newarremitter",this.arr)
-          // let interval = []
-          //console.log(this.arr)
-         // console.log(this.date1)
-          //dayjs(this.selectedDate).subtract(1, "year");
-          // console.log(date2.daysInMonth())
           for(let i = 0; i <= diff;i++){
             this.interval.push(dayjs(this.startDate).add(i,"day"))
             
           }
           
           this.arr = this.arr.reverse().splice(0,1)
-          
-          //console.log(this.interval)
-          
-          //console.log(this.intervalDays)
-          //console.log(this.currentMonthDays)
-          
-          // for(let i of this.days){
-             
-          //   currentdays.push(i.date)
-  
-          // }
+        
           let x = 0
-        // for(let i of this.interval){
-        //   for(let j of this.days){
-        //     if(dayjs(i).format("YYYY-MM-DD") == j.date){
-               
-        //     } 
-        //   }
-        // }
-        // this.$emit("intervals",interval)
-        // გავატანოთ ინფორმაცია ინტერვალზე და 
-        // მიმდინარე დღეებზე მოცემულ თვეში
-        // https://www.youtube.com/watch?v=UtV-WZUtak4
           
          }
         },

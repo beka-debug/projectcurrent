@@ -109,7 +109,9 @@ export default {
       monthindex:0,
       dropYears:[],
       fulldate:dayjs(),
-      daysInCurrentMonth:[]
+      daysInCurrentMonth:[],
+      x:"",
+      date1:null
     };
   },
   props:{
@@ -127,7 +129,23 @@ export default {
       return false
      }
     },
-    
+    z(){
+              if(this.lastinterva != ""){
+        if(this.arr[this.arr.length - 1]>this.lastinterva){
+          this.date1 = dayjs(this.lastinterva)
+          console.log("last", this.lastinterva)
+        }
+        else{
+          this.date1 = dayjs(this.arr[this.arr.length - 1])
+          console.log("same", this.lastinterva)
+        }
+      }
+      else{
+        this.date1 = dayjs(this.arr[this.arr.length - 1])
+        console.log("empty first")
+      }
+      return this.date1
+    },
     days() {
       return [
         ...this.previousMonthDays,
@@ -198,7 +216,7 @@ export default {
          first:true ? date == firstInterval : false,
          last:true ? date == lastInterval : false,
          weekend: isWeekend,
-         fulldate: true ? (this.selectedDate == date && isWeekend == false) : false,
+         fulldate: true ? (this.selectedDate == date) : false,
         };
       });
     },
@@ -291,10 +309,11 @@ export default {
      this.selectedDate = this.fulldate
      this.arr.push(this.selectedDate.format("YYYY-MM-DD"))
     this.$emit("intervalemitter",this.selectedDate.format("YYYY-MM-DD"))
-
+    console.log("xxx")
     if(this.arr.length == 1){
         let date1 = dayjs(this.arr[this.arr.length - 1])
         let date2 = dayjs(this.lastinterva)
+        
         let diff = date1.diff(date2,"hours")/24
         for(let i = 0; i <= diff;i++){
           this.interval.push(date2.add(i,"day"))
@@ -308,7 +327,7 @@ export default {
         //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
         let date1 = dayjs(this.arr[this.arr.length - 1])
         let date2 = dayjs(this.arr[this.arr.length - 2])
-
+        console.log(date2)
         let diff = date1.diff(date2,"hours")/24
 
         for(let i = 0; i <= diff;i++){
@@ -343,7 +362,7 @@ export default {
         //this.$emit("dropyearsemitter", this.dropYears)
       // console.log(this.lastinterva)
 
-      console.log(this.daysInCurrentMonth)
+      console.log(this.x)
        // console.log(this.dropYears, this.showyear)
     },
     chooseYearSubscriber(yr){
@@ -388,24 +407,49 @@ export default {
       // if(this.arr.length == 1){
 
       // }
+      console.log(this.arr)
        if(this.arr.length == 1){
         let date1 = dayjs(this.arr[this.arr.length - 1])
         let date2 = dayjs(this.lastinterva)
         let diff = date1.diff(date2,"hours")/24
+        //this.interval = []
         for(let i = 0; i <= diff;i++){
           this.interval.push(date2.add(i,"day"))
           
         }
         this.$emit("leftintervalemitter",this.interval)
+
         this.arr = this.arr.reverse().splice(0,1)
        }
-       if(this.arr.length > 1){
+        if(this.arr.length > 1){
+      //   //this.interval = []
+      //   //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
+      //   if(this.lastinterva != ""){
+      //   if(this.arr[this.arr.length - 1]>this.lastinterva){
+      //     var date1 = dayjs(this.lastinterva)
+      //     console.log("last", this.lastinterva)
+      //   }
+      //   else{
+      //     var date1 = dayjs(this.arr[this.arr.length - 1])
+      //     console.log("same", this.lastinterva)
+      //   }
+      // }
+      // else{
+      //   var date1 = dayjs(this.arr[this.arr.length - 1])
+      //   console.log("empty first")
+      // }
         
-        //console.log(this.selectedDate.diff(this.arr[this.arr.length - 1]),"days")
-        let date1 = dayjs(this.arr[this.arr.length - 1])
-        let date2 = dayjs(this.arr[this.arr.length - 2])
-
-        let diff = date1.diff(date2,"hours")/24
+        console.log(this.lastinterva)
+        console.log(this.z)
+        //let x1 = dayjs(this.lastinterva).format("DD") 
+        //let x2 = (dayjs(this.arr[this.arr.length - 2]).format("DD"))
+       // this.date1 = dayjs(this.arr[this.arr.length -1])
+        let date2 =  dayjs(this.arr[this.arr.length - 2])
+        // console.log(this.arr[this.arr.length - 1],this.lastinterva)
+        // console.log(this.arr[this.arr.length - 1]==this.lastinterva)
+        //date2 = this.lastinterva
+       // let date2 = this.lastinterva
+        let diff = this.z.diff(date2,"hours")/24
 
         for(let i = 0; i <= diff;i++){
           this.interval.push(date2.add(i,"day"))
