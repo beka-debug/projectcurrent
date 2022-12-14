@@ -22,6 +22,13 @@
   .day-of-week {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    font-size: 14px;
+    color: #3C3C3B;
+    font: normal normal normal 14px/27px Poppins;
+letter-spacing: 0.28px;
+color: #3C3C3B;
+opacity: 0.9;
+
   }
   
   .day-of-week > * {

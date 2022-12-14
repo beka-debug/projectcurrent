@@ -1,8 +1,8 @@
 <template>
     <div class="calendar-date-selector">
-      <span @click="selectPrevious"><<</span>
+      <span @click="selectPrevious" class="arrow"><</span>
       <span @click="selectCurrent">{{selectedDate.format("YYYY")}}</span>
-      <span @click="selectNext">>></span>
+      <span @click="selectNext" class="arrow">></span>
     </div>
   </template>
   
@@ -25,6 +25,8 @@
     },
   
     methods: {
+
+    
       selectPrevious() {
         let newSelectedDate = dayjs(this.selectedDate).subtract(1, "year");
         this.$emit("dateSelected", newSelectedDate);
@@ -33,6 +35,8 @@
       selectCurrent() {
         let newSelectedDate = dayjs(this.currentDate);
         this.$emit("dateSelected", newSelectedDate);
+        this.$emit("showYearFuncEmitter",true)
+        
       },
   
       selectNext() {
@@ -47,13 +51,18 @@
   .calendar-date-selector {
     display: flex;
     justify-content: space-between;
-    width: 80px;
-    color: var(--grey-800);
+    font-size: 12px;
+    color:#3C3C3B;
   }
   
   .calendar-date-selector > * {
     cursor: pointer;
     user-select: none;
+  }
+  .arrow{
+    color: #3C3C3B4D;
+    font-weight: bold;
+    margin: 0px 9px;
   }
   </style>
   

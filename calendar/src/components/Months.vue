@@ -54,8 +54,8 @@ export default{
 
 <style scoped>
 .months{
-    width: 300px;
-    height: 250px;
+    width: 230px;
+    height: 200px;
     background-color: white;
 
     

@@ -52,42 +52,45 @@
   <style scoped>
   .calendar-day {
     position: relative;
-    height: 40px;
-
+    width: 24px;
+    height: 24px;
+   
     font-size: 16px;
-    background-color: #fff;
-    color: var(--grey-800);
+    
+
     display: flex;
     justify-content: center !important;
     align-items: center !important;
   }
   
+  
   .calendar-day > span {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 14px;
     
-    right: 2px;
-    width: var(--day-label-size);
-    height: var(--day-label-size);
+
   }
   
   .calendar-day--not-current {
-    background-color: var(--grey-100);
-    color: var(--grey-300);
+    font: normal normal normal 14px/27px Poppins;
+letter-spacing: 0.28px;
+color: #3C3C3B;
+opacity: 0.9;
   }
   
   .calendar-day--today {
     
   }
   
-  .calendar-day--today > span {
-    color: #fff;
-    border-radius: 9999px;
-    background-color: var(--grey-800);
-  }
+
   .is-selected-date{
-    background-color: green !important;
+    background-color: #418200 !important;
+    border-radius: 6px;
+  }
+  li{
+    margin:0px 3px;
   }
   </style>
   

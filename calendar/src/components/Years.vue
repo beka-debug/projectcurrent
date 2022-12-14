@@ -44,7 +44,7 @@ export default{
             show:false,
             index:index
           }
-         this.$emit("chooseyearemitter",info,)
+         this.$emit("chooseyearemitter",info)
          console.log(info)
     },
 
@@ -57,9 +57,10 @@ export default{
 <style scoped>
 
 .years{
-    width: 300px;
-    height: 250px;
-    background-color: red;
+    width: 230px;
+    height: 200px;
+    background-color: white;
+    
 
     
 }
