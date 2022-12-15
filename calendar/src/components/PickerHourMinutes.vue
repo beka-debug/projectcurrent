@@ -30,7 +30,7 @@
             v-bind:class="{hid: String(i).slice(1,3) < 0 || i > 59}">{{i}}
         </p>
         </div>
-        
+        <button @click="z">z </button>
     </div>
     
 </template>
@@ -44,7 +44,11 @@ export default{
             isDown:null,
             scrollTop:null,
             startY:null,
+            
         }
+    },
+    props:{
+      enteredhour:String
     },
 
     computed:{
@@ -75,7 +79,7 @@ export default{
         
     },
     mounted() {
-       this.q(() => {
+       this.q(function() {
   console.log('The user has stopped scrolling');
 
 });
@@ -84,10 +88,18 @@ this.q1(()=>{
 })
     },
     methods: {
+        scrollentertime(){
+
+         },
+        z(){
+            let left1 = document.querySelector(".left");
+            console.log(this.enteredhour)
+            left1.scrollTop = this.enteredhour * 33
+        },
         x(){
             console.log(this.leftarr)
             let left = document.querySelector(".left")
-            left.style.background = "red"
+            //left.style.background = "red"
         },
         mouseIsDown:function(e){
             let left = document.querySelector(".left")
@@ -148,27 +160,33 @@ this.q1(()=>{
         q(callback){
     let isScrolling;
     let left = document.querySelector(".left")
+    var self = this
     left.addEventListener("scroll",function(e){
         
+        //console.log(self,this)
         clearTimeout(isScrolling);
-        isScrolling = setTimeout(() => {
+        isScrolling = setTimeout(function() {
         callback();
+        console.log(self,this)
+        
         e.target.scrollTop = 33.7 * parseInt(e.target.scrollTop/32.7)
         let scrolledHour =  parseInt(e.target.scrollTop/33)
-       // this.$emit("scrollhouremitter",scrolledHour)
-        
+        self.$emit("scrollhouremitter",scrolledHour)
+        console.log(this)
         }, 250);
     },false)
 },
 q1(callback){
+    var self = this
     let isScrolling;
     let right = document.querySelector(".right")
     right.addEventListener("scroll",function(e){
         clearTimeout(isScrolling);
         isScrolling = setTimeout(() => {
         callback();
-        e.target.scrollTop = 33.7 * parseInt(e.target.scrollTop/32.7)
-
+        e.target.scrollTop = 33.8 * parseInt(e.target.scrollTop/33.5)
+        let scrolledMinute =  parseInt(e.target.scrollTop/33.5)
+        self.$emit("scrollminuteemitter",scrolledMinute)
 
         }, 250);
     },false)
@@ -286,9 +304,19 @@ if(e.layerY <= mid1){
          else if(dif <=80){
              stop = 3
          }
-         if(counter == stop){
-         clearInterval(inter)
-         }
+         else{
+                    clearInterval(inter)
+                    console.log("done")
+                    right1.scrollTop += 31.7/3
+                    console.log(counter)
+                    //left1.scrollTop += 31.7/3
+                 }
+                 if(counter == stop){
+                 clearInterval(inter)
+                 }
+        //  if(counter == stop){
+        //  clearInterval(inter)
+        //  }
      }, 50);
   console.log("2222222",e.layerY-right1.offsetTop)
 }

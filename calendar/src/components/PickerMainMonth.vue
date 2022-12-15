@@ -48,12 +48,17 @@
       
       </div>
       <div class="minutehours">
-        <HourMinutes/>
+        <HourMinutes
+        @entertimeemitter="entertimesubscriber"
+        />
         <TextHourMinutes/>
         <PickerHourMinutes
         @choosehouremitter="choosehoursubscriber"
         @chooseminuteemitter="chooseminutesubscriber"
         @scrollhouremitter="scrollhoursubscriber"
+        @scrollminuteemitter="scrollminutesubscriber"
+        :enteredhour="enthour"
+
         />
 
       </div>
@@ -100,7 +105,8 @@
       return {
         selectedDate: dayjs(),
         showyear:false,
-        show:false
+        show:false,
+        enthour:''
       };
     },
   
@@ -205,8 +211,18 @@
     },
   
     methods: {
+
+      entertimesubscriber(e){
+        this.selectedDate = (this.selectedDate.set('hour',e.slice(0,2)))
+        this.enthour = e.slice(0,2) 
+        console.log(e.slice(0,2),"subscriber")
+      },
+
       scrollhoursubscriber(e){
         this.selectedDate = (this.selectedDate.set('hour',e))
+      },
+      scrollminutesubscriber(e){
+        this.selectedDate = (this.selectedDate.set('minute',e))
       },
       showYearFuncSubscriber(e){
       this.showyear = !this.showyear

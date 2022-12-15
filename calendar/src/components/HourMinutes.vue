@@ -1,12 +1,24 @@
 <template>
     <div class="x">
-        <input type="time">
+        <input type="time" v-on:keyup="entertime" v-model="time">
     </div>
 </template>
 
 <script>
 export default{
-
+    data() {
+        return {
+            time:""
+        }
+    },
+    methods: {
+        entertime(){
+            if(this.time.length > 2){
+            this.$emit("entertimeemitter",this.time) 
+            console.log("emitter")
+        }
+      }
+    },
 }
 </script>
 
